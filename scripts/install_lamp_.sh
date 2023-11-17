@@ -11,10 +11,6 @@ set -x
 # Instalamos el servidor APACHE
 sudo apt install apache2 -y
 
-## Instalamos MYSQL SERVER
-apt install mysql-server -y
-
-
 # Instalar php 
 sudo apt install php libapache2-mod-php php-mysql -y
 
