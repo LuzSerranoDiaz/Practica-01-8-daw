@@ -23,8 +23,6 @@ rm -rf /var/www/html/wp-admin
 rm -rf /var/www/html/wp-content
 rm -rf /var/www/html/wp-includes
 
-
-
 #poner wordpress en tmp
 wget http://wordpress.org/latest.tar.gz -P /tmp
 
