@@ -8,6 +8,8 @@ set -x
 # ACtualizamos los paquetes del sistema
 # apt upgrade -y
 
+source .env
+
 apt install mysql-server -y
 
 #configuramos el parametro bind-address
