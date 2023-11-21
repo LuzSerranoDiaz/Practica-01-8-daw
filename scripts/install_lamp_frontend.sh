@@ -20,9 +20,5 @@ cp ../conf/000-default.conf /etc/apache2/sites-available
 #Reiniciamos servicio apache
 systemctl restart apache2
 
-# Copiamos el archivo de prueba de PHP
-cp ../php/index.php /var/www/html
-
-
 # Cambiamos usuario y propietario de var/www/html
 chown -R www-data:www-data /var/www/html

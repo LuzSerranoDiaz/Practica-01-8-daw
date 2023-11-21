@@ -36,7 +36,7 @@ wp config create \
   --dbname=$WORDPRESS_DB_NAME \
   --dbuser=$WORDPRESS_DB_USER \
   --dbpass=$WORDPRESS_DB_PASSWORD \
-  --dbhost=localhost \
+  --dbhost=$IP_PRIVADA_MYSQL \
   --path=/var/www/html \
   --allow-root
 
