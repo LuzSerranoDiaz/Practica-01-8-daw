@@ -10,39 +10,51 @@ source .env
 # ACtualizamos los paquetes del sistema
 # apt upgrade -y
 
-#instalamos zip
-sudo apt install zip -y
+# Eliminamos descargas previas de wp-cli
+rm -rf /tmp/wp-cli.phar
 
-#instalamos tar
-sudo apt install tar
+# Descargamos la herramienta wp-cli
+wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -P /tmp
 
-#borrar versiones anteriores en tmp wordpress
-rm -rf /tmp/latest.tar
-rm -rf /tmp/wordpress
-rm -rf /var/www/html/wp-admin
-rm -rf /var/www/html/wp-content
-rm -rf /var/www/html/wp-includes
+# Le damos permisos de ejecución
+chmod +x /tmp/wp-cli.phar
 
-#poner wordpress en tmp
-wget http://wordpress.org/latest.tar.gz -P /tmp
+# Movemos el archivo a /usr/local/bin
+mv /tmp/wp-cli.phar /usr/local/bin/wp
 
-#descomprimimos el archivo gz
-gunzip /tmp/latest.tar.gz
+# Eliminamos instalaciones previas de WordPress
+rm -rf /var/www/html/*
 
-#descomprimimos el archivo tar
-tar -xvf /tmp/latest.tar -C /tmp
+#Descargamos el codigo fuente de wordpress
+wp core download \
+  --locale=es_ES \
+  --path=/var/www/html \
+  --allow-root
 
-#Movemos wordpress 
-mv -f /tmp/wordpress/* /var/www/html
+#creacion del archivo de configuracion
+wp config create \
+  --dbname=$WORDPRESS_DB_NAME \
+  --dbuser=$WORDPRESS_DB_USER \
+  --dbpass=$WORDPRESS_DB_PASSWORD \
+  --dbhost=localhost \
+  --path=/var/www/html \
+  --allow-root
 
-#cambiamos el propietario y el grupo 
-chown -R www-data:www-data /var/www/html/
+#Instalacion de wordpress
+wp core install \
+  --url=$CERTIFICATE_DOMAIN \
+  --title="$WORDPRESS_TITLE" \
+  --admin_user=$WORDPRESS_ADMIN_USER \
+  --admin_password=$WORDPRESS_ADMIN_PASS \
+  --admin_email=$WORDPRESS_ADMIN_EMAIL \
+  --path=/var/www/html \
+  --allow-root  
 
-#Habilitamos el modulo rewrite
-a2enmod rewrite
+# Instalamos un tema de WordPress
+wp theme install joyas-shop --activate --path=/var/www/html --allow-root
 
-#Creamos el archivo .htaccess en var/www/html
-cp ../htaccess/.htaccess /var/www/html/.htaccess
+# Instalamos un plugin para esconder la ruta wp-admin de wordpress
+wp plugin install wps-hide-login --path=/var/www/html --allow-root
 
-
-systemctl restart apache2
+# Modificarmos los premisos de /var/www/html
+chown -R www-data:www-data /var/www/html
